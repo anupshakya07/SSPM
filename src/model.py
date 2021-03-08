@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 import scipy as sc
 
 
-class Model:
+class LearningModel:
     EMBEDDING_DIMENSION = 300
     TEST_SIZE = 0.1
 
@@ -19,7 +19,7 @@ class Model:
         self.latent_dim = latent_dim
         self.kc_dimension = kc_dimension
         self.encoder_inputs = Input(shape=(None, self.EMBEDDING_DIMENSION), dtype=tf.float32)
-        self.decoder_inputs = Input(shape=(None, self.kc_dimension))
+        self.decoder_inputs = Input(shape=(None, 300), dtype=tf.float32)
         self.model = None
         self.encoder_states = []
         self.encoder_model = None
@@ -188,5 +188,5 @@ def cosine_similarity(wv1, wv2):
 
 
 if __name__ == "__main__":
-    myModel = Model(200, 933)
+    myModel = LearningModel(200, 933)
     myModel.create_model()
