@@ -3,7 +3,7 @@ import time
 import tensorflow as tf
 import numpy as np
 from keras.layers import Input, LSTM, Dense, Dropout
-from keras.models import Model
+from keras.models import Model, load_model
 from sklearn.model_selection import train_test_split
 import scipy as sc
 
@@ -19,7 +19,7 @@ class LearningModel:
         self.latent_dim = latent_dim
         self.kc_dimension = kc_dimension
         self.encoder_inputs = Input(shape=(None, self.EMBEDDING_DIMENSION), dtype=tf.float32)
-        self.decoder_inputs = Input(shape=(None, 300), dtype=tf.float32)
+        self.decoder_inputs = Input(shape=(None, self.kc_dimension), dtype=tf.float32)
         self.model = None
         self.encoder_states = []
         self.encoder_model = None
@@ -115,7 +115,7 @@ class LearningModel:
 
         self.decoder_model = Model([self.decoder_inputs] + decoder_state_inputs, [decoder_outputs2] + decoder_states2)
 
-    def evaluate_model(self, x, y, max_length_src, max_length_tar, kcOneHotEncoder):
+    def evaluate_model(self, x, y, max_length_src, max_length_tar, kcOneHotEncoder, eval_type="Training"):
         train_gen = self.generate_batch(x, y, batch_size=1, input_dimension=self.EMBEDDING_DIMENSION,
                                         output_dimension=self.kc_dimension, max_length_src=max_length_src,
                                         max_length_tar=max_length_tar)
@@ -135,12 +135,15 @@ class LearningModel:
                 if not is_zero_vector and not is_one_vector:
                     actual_output_words.append(kcOneHotEncoder.inverse_transform([vector_np])[0][0])
             #         print("Actual Words -> ", actual_output_words)
+            res = 0
             decoded_sen = self.decode_sequence(input_seq, kcOneHotEncoder)
-            decoded_word_sentence = kcOneHotEncoder.inverse_transform(decoded_sen).reshape(-1)
+            if len(decoded_sen)>0:
+                decoded_word_sentence = kcOneHotEncoder.inverse_transform(decoded_sen).reshape(-1)
             #         print("Predicted Sequence -> ", decoded_word_sentence)
 
-            res = len(set(actual_output_words) & set(decoded_word_sentence)) / float(
-                len(set(actual_output_words) | set(decoded_word_sentence)))
+                res = len(set(actual_output_words) & set(decoded_word_sentence)) / float(
+                    len(set(actual_output_words) | set(decoded_word_sentence)))
+
             if res == 1:
                 num_correct += 1
             else:
@@ -152,7 +155,7 @@ class LearningModel:
         print("Latent Dimension = ", self.latent_dim)
         print("Total Correct = ", num_correct)
         print("Total Incorrect = ", num_incorrect)
-        print("Similarity Mean on Training Data = ", np_similarity_array.mean())
+        print("Similarity Mean on ", eval_type, " data = ", np_similarity_array.mean())
         print("Total Time taken for evaluation = ", end_time - start_time, " secs")
 
     def decode_sequence(self, input_seq, kcOneHotEncoder):
@@ -180,6 +183,12 @@ class LearningModel:
             target_seq[0][0] = corrected_one_hot
             state_values = [h, c]
         return decoded_sentence
+
+    def save_model(self, model_name):
+        self.model.save("saved_models/keras_models/"+model_name)
+
+    def load_model(self, model_name):
+        self.model = load_model("saved_models/keras_models/"+model_name)
 
 
 def cosine_similarity(wv1, wv2):

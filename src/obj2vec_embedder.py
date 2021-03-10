@@ -46,7 +46,7 @@ class RelationWordEmbedding:
         print("Embedding Dimension of the Word Embeddings = ", self.embedding_dimension)
         print("Sliding Window Size = ", self.sliding_window_size)
         start_time = time.time()
-        self.model = gensim.models.Word2Vec(self.sentences, size=self.embedding_dimension, window=self.sliding_window_size, min_count = 1)
+        self.model = gensim.models.Word2Vec(self.sentences, size=self.embedding_dimension, window=self.sliding_window_size, min_count=1)
         end_time = time.time()
         print("Time taken to train the word embeddings = ", end_time - start_time, " secs.")
 
