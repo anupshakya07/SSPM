@@ -1,8 +1,7 @@
 from src import data_preprocessor
 from src import one_hot_encoder
 from src import obj2vec_embedder
-from src import lstm_ns_random_model
-from src import model
+from src import model, lstm_ns_random_model, lstm_ns_naive_group
 
 if __name__ == "__main__":
     train_file_path = "datasets/bridge_to_algebra_2008_2009/sample_bridge_to_algebra_2008_2009_train.txt"
@@ -18,10 +17,22 @@ if __name__ == "__main__":
     one_hot_encoder = one_hot_encoder.OneHotEnc()
     one_hot_encoder.train(data_processor.unique_kcs)
 
-    model = lstm_ns_random_model.NsRandomModel(200, len(data_processor.unique_kcs), train_file_path,
-                                               obj_to_vec_embedder.model, one_hot_encoder)
-    model.generate_training_sample(10000)
-    model.train_model(5, 50)
+    ################################################################################################
+    # For LSTM-NS-Random Model
+    # model = lstm_ns_random_model.NsRandomModel(200, len(data_processor.unique_kcs), train_file_path,
+    #                                            obj_to_vec_embedder.model, one_hot_encoder)
+    # model.generate_training_sample(n_rows=10000)
+    # model.train_model(5, 50)
+    ################################################################################################
+
+    ################################################################################################
+    # For LSTM-NS-NaiveGroup Model
+    model = lstm_ns_naive_group.NsNaiveGroupModel(200, len(data_processor.unique_kcs), train_file_path,
+                                                  obj_to_vec_embedder.model, one_hot_encoder)
+    model.generate_training_sample(sample_size=10)
+    model.train_model(5, 10)
+    ################################################################################################
+
     # model.save_model("test_model")
 
     model.setup_inference_model()

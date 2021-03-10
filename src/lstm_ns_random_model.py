@@ -9,14 +9,14 @@ class NsRandomModel(model.LearningModel):
         self.input_file_path = input_file_path
         self.word_embeddings = gensim_model
         self.one_hot_encoder = one_hot_encoder
-        self.random_samples_x = []
-        self.random_samples_y = []
+        self.train_samples_x = []
+        self.train_samples_y = []
         self.max_length_src = 3
         self.max_length_tar = None
 
     def generate_training_sample(self, n_rows):
-        self.random_samples_x, self.random_samples_y, self.max_length_tar = self.generate_sample(self.input_file_path,
-                                                                                                 n_rows)
+        self.train_samples_x, self.train_samples_y, self.max_length_tar = self.generate_sample(self.input_file_path,
+                                                                                               n_rows)
 
     def generate_sample(self, file_path, n_rows):
         start_time = time.time()
@@ -62,9 +62,9 @@ class NsRandomModel(model.LearningModel):
     def train_model(self, num_epochs, batch_size):
         self.create_model()
         print(self.model.summary())
-        super().train_model(self.random_samples_x, self.random_samples_y, self.max_length_src, self.max_length_tar,
+        super().train_model(self.train_samples_x, self.train_samples_y, self.max_length_src, self.max_length_tar,
                             num_epochs, batch_size)
 
     def evaluate_training_accuracy(self, n):
-        self.evaluate_model(self.random_samples_x[:n], self.random_samples_y[:n], self.max_length_src,
+        self.evaluate_model(self.train_samples_x[:n], self.train_samples_y[:n], self.max_length_src,
                             self.max_length_tar, self.one_hot_encoder.model)
