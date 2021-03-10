@@ -1,7 +1,7 @@
 from src import data_preprocessor
 from src import one_hot_encoder
 from src import obj2vec_embedder
-from src import model, lstm_ns_random_model, lstm_ns_naive_group
+from src import model, lstm_ns_random_model, lstm_ns_naive_group, lstm_ns_clustered
 
 if __name__ == "__main__":
     train_file_path = "datasets/bridge_to_algebra_2008_2009/sample_bridge_to_algebra_2008_2009_train.txt"
@@ -27,9 +27,17 @@ if __name__ == "__main__":
 
     ################################################################################################
     # For LSTM-NS-NaiveGroup Model
-    model = lstm_ns_naive_group.NsNaiveGroupModel(200, len(data_processor.unique_kcs), train_file_path,
-                                                  obj_to_vec_embedder.model, one_hot_encoder)
-    model.generate_training_sample(sample_size=10)
+    # model = lstm_ns_naive_group.NsNaiveGroupModel(200, len(data_processor.unique_kcs), train_file_path,
+    #                                               obj_to_vec_embedder.model, one_hot_encoder)
+    # model.generate_training_sample(sample_size=10)
+    # model.train_model(5, 10)
+    ################################################################################################
+
+    ################################################################################################
+    # For LSTM-NS-Clustered Model
+    model = lstm_ns_clustered.NsClusteredModel(200, len(data_processor.unique_kcs), train_file_path,
+                                               obj_to_vec_embedder.model, one_hot_encoder)
+    model.generate_training_sample(data_processor.unique_students, data_processor.unique_problems, 20, 500)
     model.train_model(5, 10)
     ################################################################################################
 
@@ -40,7 +48,3 @@ if __name__ == "__main__":
 
     test_x, test_y, max_target_length = model.generate_sample(test_file_path, 200)
     model.evaluate_model(test_x, test_y, 3, max_target_length, one_hot_encoder.model, "Test")
-
-
-
-
