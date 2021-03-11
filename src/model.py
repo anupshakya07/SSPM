@@ -161,6 +161,7 @@ class LearningModel:
         print("Total Incorrect = ", num_incorrect)
         print("Similarity Mean on ", eval_type, " data = ", np_similarity_array.mean())
         print("Total Time taken for evaluation = ", end_time - start_time, " secs")
+        return np_similarity_array.mean()
 
     def decode_sequence(self, input_seq, kcOneHotEncoder):
         start_token = np.ones(self.kc_dimension)

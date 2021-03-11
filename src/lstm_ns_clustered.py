@@ -16,7 +16,7 @@ def kmeans_cluster(num_clusters, word_embeddings):
     silhouette_score = metrics.silhouette_score(word_embeddings, labels, metric='euclidean')
     print("Silhouette Score for the clusters = ", silhouette_score)
 
-    return labels, centroids
+    return kmeans, labels, centroids
 
 
 class NsClusteredModel(lstm_ns_random_model.NsRandomModel):
@@ -38,8 +38,9 @@ class NsClusteredModel(lstm_ns_random_model.NsRandomModel):
                 problem_name_word_embeddings.append(self.word_embeddings.wv[prob])
         print("Problem Name Word Embeddings Length = ", len(problem_name_word_embeddings))
 
-        std_cluster_labels, std_cluster_centers = kmeans_cluster(n_std_clusters, student_word_embeddings)
-        prob_cluster_labels, prob_cluster_centers = kmeans_cluster(n_prob_clusters, problem_name_word_embeddings)
+        std_kmeans, std_cluster_labels, std_cluster_centers = kmeans_cluster(n_std_clusters, student_word_embeddings)
+        prob_kmeans, prob_cluster_labels, prob_cluster_centers = kmeans_cluster(n_prob_clusters,
+                                                                                problem_name_word_embeddings)
 
         for c in std_cluster_centers:
             std = self.word_embeddings.wv.most_similar(positive=[c], topn=1)[0][0]
