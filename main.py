@@ -48,12 +48,12 @@ if __name__ == "__main__":
     ################################################################################################
 
     ################################################################################################
-    # For LSTM-NS-Clustered Model
+    # For LSTM-NS-Adaptive Model
     model = lstm_ns_adaptive.NsAdaptiveModel(200, len(data_processor.unique_kcs), train_file_path, test_file_path,
                                              obj_to_vec_embedder.model, one_hot_encoder)
     model.set_student_validation_size(size=3)
     model.set_problem_validation_size(size=3)
-    model.generate_training_sample(data_processor.unique_students, data_processor.unique_problems, 100, 100)
+    model.generate_training_sample(data_processor.unique_students, data_processor.unique_problems, 100, 1000)
     model.train_model(num_epochs=30, batch_size=100, sampling_factor=4, n_iter=10)
     ################################################################################################
 
