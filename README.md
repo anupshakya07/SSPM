@@ -5,6 +5,12 @@
 This code implementation contains implementation of four major models: LSTM-NS-Random, LSTM-NS-NaiveGroup, LSTM-NS-Clustered 
 and LSTM-NS-Adaptive.
 
+## Compiler and Package Requirements
+Python 3.6
+Gensim 3.x
+Tensorflow 2.x
+
+
 #### LSTM-NS-Random
 For this model, use the class named NsRandomModel. Initialize the constructor with the required parameters. Then, use the
 generate_training_sample() method to generate samples for training. Then, use train_model() method to train the model. For
