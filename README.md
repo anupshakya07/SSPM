@@ -7,7 +7,9 @@ and LSTM-NS-Adaptive.
 
 ## Compiler and Package Requirements
 Python 3.6
+
 Gensim 3.x
+
 Tensorflow 2.x
 
 
