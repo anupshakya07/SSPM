@@ -52,3 +52,13 @@ for each iteration
     update the importance weights for each cluster
     sample new instances based on importance weights
 ```
+
+## Citing
+If you found this work useful, please consider citing.
+
+@inproceedings{shakya2021sspm,
+	author = {Anup Shakya and Vasile  Rus and Deepak Venugopal},
+	title = {Student Strategy Prediction using a Neuro-Symbolic Approach},
+	booktitle = {Fourteenth International Conference on Educational Data Mining 2021},
+	year = {2021}
+}
